@@ -7,7 +7,29 @@ import ServiceFilters, {
   FilterState,
 } from "@/components/services/ServiceFilters";
 import { Button } from "@/components/ui/button";
-import { TbChevronLeft, TbChevronRight } from "react-icons/tb";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  TbChevronLeft,
+  TbChevronRight,
+  TbAdjustmentsHorizontal,
+  TbSearch,
+} from "react-icons/tb";
 
 interface Service {
   id: string;
@@ -100,21 +122,41 @@ const ServicesPage = () => {
 
   return (
     <PublicLayout>
-      <div className="min-h-screen bg-background py-8">
+      <div className="min-h-screen bg-gray-50 py-8">
         <div className="container mx-auto px-4">
+          {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">
+            <h1 className="text-3xl font-bold text-foreground mb-4">
               Jelajahi Jasa
             </h1>
-            <p className="text-muted-foreground">
-              Temukan berbagai jasa profesional dari mahasiswa UIN Suska Riau
+            <p className="text-gray-600">
+              Temukan {pagination.total} jasa profesional dari mahasiswa UIN
+              Suska Riau
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Filters Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-4">
+          {/* Search Bar */}
+          <div className="mb-6">
+            <div className="relative">
+              <TbSearch className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+              <Input
+                type="search"
+                placeholder="Cari jasa yang kamu butuhkan..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-12 h-12 text-base bg-white border-gray-300 focus:border-green-600 focus:ring-green-600"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-8">
+            {/* Desktop Sidebar Filter */}
+            <div className="hidden lg:block w-64 shrink-0">
+              <div className="bg-white rounded-lg p-6 sticky top-24">
+                <div className="flex items-center gap-2 mb-6">
+                  <TbAdjustmentsHorizontal className="h-5 w-5" />
+                  <h2 className="text-lg font-semibold">Filter</h2>
+                </div>
                 <ServiceFilters
                   onFilterChange={handleFilterChange}
                   onSearch={handleSearch}
@@ -122,8 +164,62 @@ const ServicesPage = () => {
               </div>
             </div>
 
-            {/* Services Grid */}
-            <div className="lg:col-span-3">
+            {/* Main Content */}
+            <div className="flex-1">
+              {/* Mobile Filter Button */}
+              <div className="lg:hidden mb-4">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" className="w-full">
+                      <TbAdjustmentsHorizontal className="h-4 w-4 mr-2" />
+                      Filter & Urutkan
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left">
+                    <SheetHeader>
+                      <SheetTitle>Filter</SheetTitle>
+                      <SheetDescription>
+                        Sesuaikan pencarian Anda
+                      </SheetDescription>
+                    </SheetHeader>
+                    <div className="mt-6">
+                      <ServiceFilters
+                        onFilterChange={handleFilterChange}
+                        onSearch={handleSearch}
+                      />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+
+              {/* Sort Options */}
+              <div className="bg-white rounded-lg p-4 mb-6 flex items-center justify-between gap-4 flex-wrap">
+                <p className="text-sm text-gray-600">
+                  Menampilkan {services.length} dari {pagination.total} hasil
+                </p>
+                <div className="flex items-center gap-3">
+                  <Select
+                    value={filters.sortBy}
+                    onValueChange={(value) =>
+                      handleFilterChange({ ...filters, sortBy: value })
+                    }
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Urutkan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="newest">Terbaru</SelectItem>
+                      <SelectItem value="popular">Terpopuler</SelectItem>
+                      <SelectItem value="rating">Rating Tertinggi</SelectItem>
+                      <SelectItem value="price-low">Harga Terendah</SelectItem>
+                      <SelectItem value="price-high">
+                        Harga Tertinggi
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {[...Array(6)].map((_, i) => (
@@ -134,22 +230,26 @@ const ServicesPage = () => {
                   ))}
                 </div>
               ) : services.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="bg-white rounded-lg p-12 text-center">
                   <div className="text-6xl mb-4">🔍</div>
                   <h3 className="text-xl font-semibold text-foreground mb-2">
                     Tidak ada jasa ditemukan
                   </h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-gray-600 mb-4">
                     Coba ubah filter atau kata kunci pencarian Anda
                   </p>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setFilters({ sortBy: "newest" });
+                      setSearchQuery("");
+                    }}
+                  >
+                    Reset Filter
+                  </Button>
                 </div>
               ) : (
                 <>
-                  {/* Results Info */}
-                  <div className="mb-4 text-sm text-muted-foreground">
-                    Menampilkan {services.length} dari {pagination.total} jasa
-                  </div>
-
                   {/* Services Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
                     {services.map((service) => (
@@ -165,6 +265,7 @@ const ServicesPage = () => {
                         size="icon"
                         onClick={() => handlePageChange(pagination.page - 1)}
                         disabled={pagination.page === 1}
+                        className="h-10 w-10"
                       >
                         <TbChevronLeft className="h-4 w-4" />
                       </Button>
@@ -188,6 +289,11 @@ const ServicesPage = () => {
                                 }
                                 size="icon"
                                 onClick={() => handlePageChange(page)}
+                                className={`h-10 w-10 ${
+                                  pagination.page === page
+                                    ? "bg-green-600 hover:bg-green-700 text-white"
+                                    : ""
+                                }`}
                               >
                                 {page}
                               </Button>
@@ -199,7 +305,7 @@ const ServicesPage = () => {
                             return (
                               <span
                                 key={page}
-                                className="flex items-center px-2"
+                                className="flex items-center px-2 text-gray-400"
                               >
                                 ...
                               </span>
@@ -214,6 +320,7 @@ const ServicesPage = () => {
                         size="icon"
                         onClick={() => handlePageChange(pagination.page + 1)}
                         disabled={pagination.page === pagination.totalPages}
+                        className="h-10 w-10"
                       >
                         <TbChevronRight className="h-4 w-4" />
                       </Button>
