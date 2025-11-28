@@ -21,6 +21,7 @@ import Logo from "@/public/logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { Bell } from "lucide-react";
 import NotificationDropdown from "@/components/notifications/NotificationDropdown";
+import InboxDropdown from "@/components/chat/InboxDropdown"; // <--- Import Baru
 import { useChat } from "@/contexts/ChatContext";
 import { ChatInboxList } from "./chat/ChatInboxList";
 
@@ -103,48 +104,11 @@ const Header = () => {
               {/* Notifikasi Dropdown (Desktop Only) */}
               <NotificationDropdown />
 
+              <InboxDropdown />
+
               <Button className="text-sm">
                 <TbTools className="text-white" />
                 <Link href="/seller/dashboard">Jadi Penyedia</Link>
-              </Button>
-              <div className="relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative rounded-full hover:bg-gray-100 text-gray-600"
-                  onClick={toggleInbox}
-                >
-                  <TbMail className="h-10 w-10" />
-
-                  {/* Badge Notifikasi Merah */}
-                  {unreadCount > 0 && (
-                    <span className="absolute top-2 right-2 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-white pointer-events-none" />
-                  )}
-                </Button>
-
-                {/* Dropdown Inbox */}
-                {isInboxOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-80 md:w-96 shadow-xl border border-gray-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 rounded-xl bg-white">
-                    <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
-                      <span className="font-semibold text-sm text-gray-900">
-                        Pesan Masuk
-                      </span>
-                      {unreadCount > 0 && (
-                        <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">
-                          {unreadCount} baru
-                        </span>
-                      )}
-                    </div>
-                    <ChatInboxList />
-                  </div>
-                )}
-              </div>
-
-              <Button className="text-sm">
-                <TbTools className="text-white" />
-                <Link href="/seller/dashboard" className="hidden lg:inline">
-                  Jadi Penyedia
-                </Link>
               </Button>
 
               {/* User Dropdown */}
