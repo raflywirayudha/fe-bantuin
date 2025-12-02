@@ -23,9 +23,12 @@ import {
   TbLogout,
   TbMenu2,
   TbChevronRight,
-  TbFileInvoice,  
+  TbFileInvoice,
+  TbUsers,
+  TbCpu,
+  TbFlag,
 } from "react-icons/tb";
-import Logo from "@/public/logo.png";
+import Logo from "@/public/logo.svg";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -63,7 +66,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
 
   const menuItems: MenuItem[] = [
     { icon: TbWallet, label: "Penarikan Dana", href: "/admin/payouts" },
-    { icon: TbFileInvoice, label: "Laporan Keuangan", href: "/admin/reports" },
+    { icon: TbFlag, label: "Laporan Masalah", href: "/admin/reports" },
+    { icon: TbUsers, label: "Pengguna", href: "/admin/users" },
+    { icon: TbCpu, label: "System Tasks", href: "/admin/tasks" },
   ];
 
   const isActive = (href: string) => pathname.startsWith(href);
@@ -136,9 +141,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           />
         </div>
         <div>
-           <h1 className="font-display text-primary font-bold text-xl">
-          Bant<span className="text-secondary">uin</span>
-        </h1>
+          <h1 className="font-display text-primary font-bold text-xl">
+            Bant<span className="text-secondary">uin</span>
+          </h1>
           <p className="text-[10px] text-muted-foreground font-medium">
             Control Panel
           </p>
@@ -158,7 +163,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                   variant="ghost"
                   className={`w-full justify-start gap-2.5 h-9 text-sm font-medium transition-all duration-200 ${
                     active
-                      ? "bg-gradient-to-r from-primary/10 via-primary/5 to-transparent text-primary border-l-2 border-primary shadow-sm"
+                      ? "bg-linear-to-r from-primary/10 via-primary/5 to-transparent text-primary border-l-2 border-primary shadow-sm"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
                 >
@@ -181,7 +186,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
               src={user?.profilePicture || ""}
               alt={user?.fullName}
             />
-            <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground text-xs font-semibold">
+            <AvatarFallback className="bg-linear-to-br from-primary to-secondary text-primary-foreground text-xs font-semibold">
               {user?.fullName ? getInitials(user.fullName) : "A"}
             </AvatarFallback>
           </Avatar>
@@ -254,7 +259,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                   src={user?.profilePicture || ""}
                   alt={user?.fullName}
                 />
-                <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground text-xs font-bold">
+                <AvatarFallback className="bg-linear-to-br from-primary to-secondary text-primary-foreground text-xs font-bold">
                   {user?.fullName ? getInitials(user.fullName) : "A"}
                 </AvatarFallback>
               </Avatar>
